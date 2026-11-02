@@ -198,7 +198,10 @@ class BLIP_NLVR(nn.Module):
     def get_flops(self):
         flops = self.visual_encoder.get_flops() * 2 + self.text_encoder.get_flops()
         flops += self.cls_head[0].in_features * self.cls_head[0].out_features + self.cls_head[2].in_features * self.cls_head[2].out_features
-        return flops.item()
+        if isinstance(flops, torch.Tensor):
+            return flops.item()
+        else:
+            return flops
         
 def blip_nlvr(pretrained='',**kwargs):
     model = BLIP_NLVR(**kwargs)
